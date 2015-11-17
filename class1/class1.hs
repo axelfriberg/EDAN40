@@ -23,33 +23,59 @@ hanoi n = 1 + 2 * hanoi (n-1)
 smallestFactor n = nextFactor 1 n
 
 nextFactor k n 
-  | k >= n            = n
-  | mod n (k+1) == 0  = k+1
-  | otherwise         = nextFactor (k+1) n
+	| k >= n            = n
+	| mod n (k+1) == 0  = k+1
+	| otherwise         = nextFactor (k+1) n
 
 -- Why does't this funtion work?
--- numFactors :: Int -> Int
--- numFactors n =
-	--length . filter 0 (map (mod n) [1..n])
+numFactors :: Int -> Int
+numFactors n =
+	length $ filter (==0) $ (map (mod n) [1..n])
 
 -- Defining types
 type Month = Integer
 daysInMonth :: Month -> Integer -> Integer
 daysInMonth m y -- Why no equals here?
-  | m <= 0 || m > 12   = 0
-  | m == 1 || m == 3 || m == 5 || m == 7 || m == 8 || m == 10 || m == 12  = 31
-  | m == 4 || m == 6 || m == 9 || m == 11   = 30
-  | mod y 4 == 0  = 29
-  | otherwise     = 28
+	| m <= 0 || m > 12   = 0
+	| m == 1 || m == 3 || m == 5 || m == 7 || m == 8 || m == 10 || m == 12  = 31
+	| m == 4 || m == 6 || m == 9 || m == 11   = 30
+	| mod y 4 == 0  = 29
+	| otherwise     = 28
 
 data Date = Date Integer Month Integer -- Why do you need to write Date first after equals?
 validDate :: Date -> Bool
 validDate (Date d m y)
-  | (d > 0) && (d <= daysInMonth m y) = True
-  | otherwise                         = False 
+ 	| (d > 0) && (d <= daysInMonth m y) = True
+ 	| otherwise                         = False 
 
--- Multiplying list elements
+ -- Multiplying list elements
+ -- Why not multiply [a] = foldl1 (*) [a]?
 multiply :: Num a => [a] -> a
-multiply [a] =
-	| length [a] == 0 = 0
-	| otherwise 
+multiply = foldl1 (*)
+
+-- substitution
+-- substitute :: Eq a => a -> a -> [a] -> [a]
+-- Doesnt work, check solution
+
+--duplicates
+duplicates :: Eq a => [a] -> Bool
+duplicates [] = False
+duplicates [x] = False
+duplicates (x:xs) 
+ | elem x xs = True -- Does this not return as soon as it finds an x?
+ | otherwise = duplicates xs
+
+removeDuplicates :: Eq a => [a] -> [a]
+removeDuplicates [] = []
+removeDuplicates [x] = [x]
+removeDuplicates (x:xs)
+  | elem x xs  = removeDuplicates xs
+  | otherwise  = x : removeDuplicates xs
+
+prop_duplicatesRemoved :: [Integer] -> Bool
+prop_duplicatesRemoved xs = not (duplicates (removeDuplicates xs))
+
+-- Pairs matches combines the elements from two lists with the same index.
+pyth n = [(a,b,c)|a<-[1..n],b<-[a..n],c<-[b..n],a^2 + b^2 == c^2]
+
+mystery xs = foldr (++) [] (map (\y -> [y]) xs)
