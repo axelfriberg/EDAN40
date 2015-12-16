@@ -79,14 +79,7 @@ type FileSystem = [File]
 -- this function returns all paths
 search :: FileSystem -> String -> [String]
 search files name =
-  [ name
-  | File name' <- files
-  , name == name'
-  ] ++
-  [ dir ++ "/" ++ path
-  | Dir dir files' <- files
-  , path <- search files' name
-  ]
+  [ name | File name' <- files, name == name'] ++[ dir ++ "/" ++ path| Dir dir files' <- files, path <- search files' name ]
 
 -- this function returns maybe a path
 searchMaybe :: FileSystem -> String -> Maybe String
@@ -135,7 +128,7 @@ remove :: Eq a => a -> Set a -> Set a
 remove x (Set xs) = Set (xs \\ [x])
 
 combine :: Eq a => Set a -> Set a -> Set a
-Set xs `combine` Set ys = Set (xs ++ ys)   -- bug!
+Set xs `combine` Set ys = Set (xs 'uninon' ys)   -- bug!
 --Set xs `combine` Set ys = Set (xs `union` ys) -- correct
 
 member :: Eq a => a -> Set a -> Bool

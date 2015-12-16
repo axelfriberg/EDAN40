@@ -93,3 +93,79 @@ exampleFileSystem =
   , Dir "bepa" [ File "apa", Dir "bepa" [], Dir "cepa" [ File "bepa" ] ]
   , Dir "cepa" [ Dir "bepa" [], Dir "cepa" [ File "apa" ] ]
   ]
+
+-----------------------------------------------------------------------------
+
+{-
+2.3
+Sets (TDA555)
+1. Design a datastructure for sets . I.e. there should be a type Set a, and a
+number of functions for creating, combining, and investigating sets. There
+should at least be a function to create an empty set, add an element to a
+set, take the union of two sets, remove an element from the set, and check
+if an element is in the set.
+
+2. Now, implement the Set datastructure. You may use lists internally.
+
+3. Redo the above exercise, but now use sorted lists of unique elements as
+your internal representation. Set union becomes more efficient that way.
+-}
+
+data Set a = Set [a]
+
+createEmptySet :: Set a
+createEmptySet = Set []
+
+addElement :: Set a -> a -> Set a
+addElement (Set xs) a = Set (a:xs)
+
+union :: Set a -> Set a -> Set a
+union (Set xs) (Set ys) = Set (xs ++ ys)
+
+{-
+2.4
+Ordering (Thompson)
+Complete the following instance declarations:
+instance (Ord a, Ord b) => Ord (a,b) where ...
+instance Ord b => Ord [b] where ...
+where pairs and lists should be ordered lexicographically, like the words in dictionary.
+-}
+
+{-
+2.5
+ListNatural (lecture)
+Natural numbers may correspond to lists of nothing!!
+type ListNatural = [()]
+For example:
+twoL = [(),()]
+threeL = [(),(),()]
+What is: (:)
+What is: (++)
+What is: map (const ())
+1. What do these functions do?
+f1 x y = foldr (:) x y
+f2 x y = foldr (const (f1 x)) [] y
+f3 x y = foldr (const (f2 x)) [()] y
+2. Continue this definition:
+instance Num ListNatural where ...
+Note: This requires ListNatural to be declared as a newtype 1 . One can
+ask: Why?
+-}
+
+{-
+2.6
+Type derivation
+Give the types of the following expressions:
+(.) :: (b -> c) -> (a -> b) -> a -> c
+(:) :: a -> [a] -> [a]
+
+1. (.)(:) :: (a -> b) -> a -> [b] -> [b]
+2. (:(.)) :: Type error
+3. ((.):) :: 
+4. ((:):)
+5. Haskel wheels: (.)(.)
+6. The Haskell smiley: (8-)
+7. Haskell goggles: (+0).(0+)
+8. A Haskell treasure: (($)$($))
+9. Haskell swearing: ([]>>=)(\_->[(>=)])
+-}
