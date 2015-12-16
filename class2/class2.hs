@@ -129,7 +129,44 @@ Complete the following instance declarations:
 instance (Ord a, Ord b) => Ord (a,b) where ...
 instance Ord b => Ord [b] where ...
 where pairs and lists should be ordered lexicographically, like the words in dictionary.
+
+
+instance (Ord a, Ord b) => Ord (a,b) where 
+   (x,y) < (z,w)       =  x<z || x==z && y<w
+   (x,y) <= (z,w)      =  x<=z || x==z && y<=w
+   (x,y) > (z,w)       =  x>z || x==z && y>w 
+   (x,y) >= (z,w)      =  x>=z || x==z && y>=w 
+   max (x,y) (z,w)
+                     | (x,y) >= (z,w) = (x,y)
+                     | otherwise      = (z,w)
+   min (x,y) (z,w) 
+                     | (x,y) <= (z,w) = (x,y)
+                     | otherwise      = (z,w)
+   (x,y) `compare` (z,w)
+                     | (x,y) == (z,w) = EQ
+                     | (x,y) < (z,w)  = LT
+                     | (x,y) > (z,w)  = GT
+
+instance Ord b => Ord [b] where 
+   [] < _                  = True
+   _  < []                 = False
+   (x:xs) < (y:ys)       = x < y && xs < ys
+   x <= y      = x < y || x == y
+   x > y      = y < x
+   x >= y     = y <= x
+   x `max` y    
+              | x >= y = x
+              | otherwise = y
+   x `min` y    
+              | x >= y = y
+             | otherwise = x
+   x `compare` y
+              | x == y = EQ
+              | x > y = GT
+              | x < y = LT
 -}
+
+-----------------------------------
 
 {-
 2.5
@@ -163,7 +200,7 @@ Give the types of the following expressions:
 2. (:(.)) :: Type error
 3. ((.):) :: 
 4. ((:):)
-5. Haskel wheels: (.)(.)
+5. Haskel wheels: (.)(.) :: (a -> b -> c) -> a -> (a1 -> b) -> a1 -> c
 6. The Haskell smiley: (8-)
 7. Haskell goggles: (+0).(0+)
 8. A Haskell treasure: (($)$($))
