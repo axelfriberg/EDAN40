@@ -55,3 +55,41 @@ appearing in it
 -}
 
 --------------------------------------------------------------------------
+
+{-
+2.2
+File Systems (TDA555)
+A file either contains data or is a directory. A directory contains other files
+(which may themselves be directories) along with a name for each one.
+
+1. Design a data type to represent the contents of a directory. Ignore the
+contents of files: you are just trying to represent file names and the way
+they are organised into directories here.
+
+2. Define a function to search for a given file name in a directory. You should
+return a path leading to a file with the given name. Thus if your directory
+contains a, b, and c, and b is a directory containing x and y, then searching
+for x should produce b/x.
+-}
+
+data File
+  = File String
+  | Dir String [File]
+ deriving ( Eq, Show )
+
+type FileSystem = [File]
+
+search :: String -> FileSystem -> String
+search "" _ = ""
+search _ [] = ""
+{- 
+search a (f:fs) 
+  | a == f = a
+  | otherwise = s ++ "/" ++ search a fs-}
+
+exampleFileSystem :: FileSystem
+exampleFileSystem =
+  [ File "apa"
+  , Dir "bepa" [ File "apa", Dir "bepa" [], Dir "cepa" [ File "bepa" ] ]
+  , Dir "cepa" [ Dir "bepa" [], Dir "cepa" [ File "apa" ] ]
+  ]
