@@ -10,7 +10,7 @@ where p and q are propositions. For example, p ∨ ¬p is a proposition.
 -}
 
 -- 1. Design a data type Proposition to represent propositions.
-data Proposition = Var String | And Proposition :&: Proposition | Or Proposition :|: Proposition | Not Proposition deriving ( Eq, Show )
+data Proposition = Var String | And Proposition Proposition | Or Proposition Proposition | Not Proposition deriving ( Eq, Show )
 
 {-
 2. Define a function
@@ -19,7 +19,15 @@ vars :: Proposition -> [String]
 
 which returns a list of the variables in a proposition. Make sure each
 variable appears only once in the list you return.
+-}
 
+vars :: Proposition -> [String]
+vars (Var x) = [x]
+vars (And p1 p2) = vars p1 ++ vars p2
+vars (Or p1 p2) = vars p2 ++ vars p2
+vars (Not p) = vars p
+
+{-
 Suppose you are given a list of variable names and their values, of type
 Bool, for example, [("p",True),("q",False)]. 
 
@@ -30,9 +38,20 @@ truthValue :: Proposition -> [(String,Bool)] -> Bool
 which determines whether the proposition is true when the variables have
 the values given.
 -}
+truthValue :: Proposition -> [(String,Bool)] -> Bool
+truthValue (Var x) values = 
+	case lookup x values of
+    Just(a) -> a
+    Nothing -> False
+truthValue (And p1 p2) values = truthValue p1 values && truthValue p2 values
+truthValue (Or p1 p2) values = truthValue p1 values || truthValue p2 values
+truthValue (Not p) values = not $ truthValue p values
 
-vars :: Proposition -> [String]
-vars (Var x) = [x]
-vars (And p1 :&: p2) = vars p1 ++ vars p2
-vars (Or p1 :|: p2) = vars p2 ++ pars p2
-vars (Not p) = vars p
+{- 
+3. Define a function
+tautology :: Proposition -> Bool
+which returns true if the proposition holds for all values of the variables
+appearing in it
+-}
+
+--------------------------------------------------------------------------
