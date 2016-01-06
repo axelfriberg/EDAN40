@@ -193,16 +193,24 @@ ask: Why?
 2.6
 Type derivation
 Give the types of the following expressions:
+
 (.) :: (b -> c) -> (a -> b) -> a -> c
+f . g      = \x -> f (g x)
+
 (:) :: a -> [a] -> [a]
 
-1. (.)(:) :: (a -> b) -> a -> [b] -> [b]
-2. (:(.)) :: Type error
-3. ((.):) :: 
-4. ((:):)
-5. Haskel wheels: (.)(.) :: (a -> b -> c) -> a -> (a1 -> b) -> a1 -> c
-6. The Haskell smiley: (8-)
-7. Haskell goggles: (+0).(0+)
-8. A Haskell treasure: (($)$($))
-9. Haskell swearing: ([]>>=)(\_->[(>=)])
+(.)(:) :: (a -> b) -> a -> [b] -> [b]
+
+(:(.)) wont work, : wants a list.
+
+((.):)  :: [(b -> c) -> (a -> b) -> a -> c] -> [(b -> c) -> (a -> b) -> a -> c] ??
+
+((:):) :: a -> [a] -> [a]
+((:):) :: [a -> [a] -> [a]] -> [a -> [a] -> [a]] ??
+
+(.)(.) :: (b -> c) -> a -> c ??
+
+(8-) :: Num a => a -> a
+
+(+0).(0+) :: 
 -}
